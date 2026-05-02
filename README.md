@@ -1,6 +1,6 @@
 # SimpleLocalization
 
-**SimpleLocalization** is a high-performance, strictly typed, and DI-less localization library for .NET 6+. It addresses the architectural gaps left by `IStringLocalizer`, allowing you to localize code where Dependency Injection cannot reach, such as Domain Layers and Static Contexts.
+**SimpleLocalization** is a zero-boilerplate, high-performance localization library for .NET that eliminates the friction of managing .resx files and DI dependencies. It provides a strictly typed, "install-and-use" experience, allowing you to localize any part of your application
 
 ---
 ### Installation
