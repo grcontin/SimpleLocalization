@@ -33,7 +33,7 @@ The library implements a robust hierarchical fallback system. If a translation i
 2. **Parent Culture** — e.g. `en`
 3. **Default / Absolute Key** — if no translation is found in the hierarchy, the library returns the fully qualified name
 
-## Benchmarks (.NET 10)
+## Benchmarks
 
 Comparison against `Microsoft.Extensions.Localization` using physical `.resx` files.
 
@@ -44,7 +44,7 @@ Comparison against `Microsoft.Extensions.Localization` using physical `.resx` fi
 | Simple Localization Format | 32.73 ns | 1.47 | 88 B |
 | IStringLocalizer Format | 37.73 ns | 1.70 | 256 B |
 
-Quick Start
+# Quick Start
 ### 1. Define your messages
 
 Mark your class with [Localizable] and use [Translation] attributes.
