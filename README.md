@@ -3,6 +3,13 @@
 **SimpleLocalization** is a high-performance, strictly typed, and DI-less localization library for .NET 6+. It addresses the architectural gaps left by `IStringLocalizer`, allowing you to localize code where Dependency Injection cannot reach, such as Domain Layers and Static Contexts.
 
 ---
+### Installation
+
+Install the package via NuGet:
+
+```bash
+dotnet add package grcontin.SimpleLocalization
+```
 
 ## Why SimpleLocalization?
 
