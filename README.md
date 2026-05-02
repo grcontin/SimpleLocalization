@@ -96,6 +96,5 @@ app.UseRequestLocalization(localizationOptions);
 // Implicit conversion to string
 string message = UserErrors.NotFound;
 
-// High-performance formatting (Zero-boxing for common types)
 string formatted = UserErrors.Notifications.Format("Gabriel", 5);
 ```
