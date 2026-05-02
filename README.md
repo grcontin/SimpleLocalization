@@ -71,7 +71,9 @@ Call this once at your application startup (e.g., `Program.cs`).
 You can provide multiple assemblies, which is useful when your localization messages are distributed across different projects or modules.
 
 ```csharp
-services.AddSimpleLocalization(
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSimpleLocalization(
     typeof(ApplicationAssemblyMarker).Assembly,
     typeof(DomainAssemblyMarker).Assembly
 );
@@ -82,7 +84,10 @@ services.AddSimpleLocalization(
 For the library to correctly identify the user's culture, it is crucial to configure the native .NET localization middleware. SimpleLocalization relies on the CultureInfo.CurrentUICulture set by this pipeline.
 
 ```csharp
-RequestLocalizationOptions localizationOptions = new RequestLocalizationOptions()
+
+var app = builder.Build();
+
+var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture("en-US")
     .AddSupportedCultures("en-US", "pt-BR")
     .AddSupportedUICultures("en-US", "pt-BR");
