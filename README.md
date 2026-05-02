@@ -15,40 +15,6 @@ dotnet add package grcontin.SimpleLocalization
 
 Standard .NET localization (`IStringLocalizer`) is built around Dependency Injection. This creates significant architectural problems when you need to localize messages in layers that should remain agnostic to infrastructure.
 
-### 1. Pure Domain Exceptions
-In a clean architecture, your Domain Layer should not depend on infrastructure services. 
-*   **The Problem:** To localize a `DomainException`, you would normally need to pass an `IStringLocalizer` through your entire call stack or use a Service Locator (anti-pattern).
-*   **The Solution:** Use `LocalizableString` directly in your exception constructors. Your domain remains pure, and your exceptions are born with the ability to be localized.
-```csharp
-public sealed class DomainException : Exception
-{
-    public DomainException(LocalizableString message) : base(message) { }
-}
-
-// Usage in Domain Service - No DI pollution
-if (balance < amount) 
-    throw new BusinessException(UserErrors.InsufficientFunds);
-
-```
-
-### 2. Validation Attributes
-
-Attributes are metadata evaluated at compile-time and do not support constructor injection.
-
-*   **The Problem:** Localizing [Required] or [RegularExpression] attributes usually involves magic strings and .resx names that are fragile and hard to refactor.
-
-*   **The Solution:** Use the static fields of your localizable classes. They provide type-safety, IDE support (find all references), and are resolved at runtime based on the current thread culture.
-
-```csharp
-
-public sealed class UserInput
-{
-    [Required(ErrorMessage = ErrorMessages.FieldRequired)]
-    public string Username { get; set; }
-}
-
-```
-
 ## RFC 9110 Compliance & Middleware Integration
 
 ### HTTP `Accept-Language` Header
@@ -66,15 +32,6 @@ The library implements a robust hierarchical fallback system. If a translation i
 1. **Specific Culture** — e.g. `en-US`
 2. **Parent Culture** — e.g. `en`
 3. **Default / Absolute Key** — if no translation is found in the hierarchy, the library returns the fully qualified name
-
-### 3. Static Contexts & Extension Methods
-
-Utility classes and extension methods often need to return human-readable messages but lack access to DI.
-
-*   **The Problem:** You cannot easily use DI inside a public static string ToRelativeTime(this DateTime date).
-
-*   **The Solution:** Access your translations directly. SimpleLocalization is global, thread-safe, and highly optimized for static access.
-
 
 ## Benchmarks (.NET 10)
 
