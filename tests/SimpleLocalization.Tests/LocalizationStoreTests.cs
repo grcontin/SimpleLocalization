@@ -12,12 +12,12 @@ public sealed class LocalizationStoreTests
     {
         // Arrange
         Assembly assembly = typeof(LocalizationStoreTests).Assembly;
-
+        
         // Act
         LocalizationStore.Initialize(assembly);
 
         // Assert
-        TestMessages.Welcome.ToString().Should().NotBeNullOrEmpty();
+        TestMessages.GreetingMessage.ToString().Should().NotBeNullOrEmpty();
     }
     
     [Theory]
@@ -30,7 +30,7 @@ public sealed class LocalizationStoreTests
         CultureInfo.CurrentUICulture = new CultureInfo(cultureCode);
 
         // Act
-        string result = TestMessages.Welcome;
+        string result = TestMessages.GreetingMessage;
 
         // Assert
         result.Should().Be(expected);
@@ -66,7 +66,7 @@ public sealed class LocalizationStoreTests
         Task taskOne = Task.Run(() =>
         {
             CultureInfo.CurrentUICulture = new CultureInfo("pt-BR");
-            string result = TestMessages.Welcome;
+            string result = TestMessages.GreetingMessage;
             
             result.Should().Be("Bem-vindo!");
         });
@@ -74,7 +74,7 @@ public sealed class LocalizationStoreTests
         Task taskTwo = Task.Run(() =>
         {
             CultureInfo.CurrentUICulture = new CultureInfo("en-US");
-            string result = TestMessages.Welcome;
+            string result = TestMessages.GreetingMessage;
             
             result.Should().Be("Welcome!");
         });
@@ -91,10 +91,10 @@ public sealed class LocalizationStoreTests
         CultureInfo.CurrentUICulture = new CultureInfo("es-ES");
     
         // Act
-        string result = TestMessages.Welcome;
+        string result = TestMessages.GreetingMessage;
     
         // Assert
-        result.Should().Be("SimpleLocalization.Tests.TestMessages.Welcome");
+        result.Should().Be("SimpleLocalization.Tests.TestMessages.GreetingMessage");
     }
     
     [Fact]
@@ -142,7 +142,7 @@ public sealed class LocalizationStoreTests
 
         // Assert
         action.Should().NotThrow();
-        TestMessages.Welcome.ToString().Should().NotBeNullOrEmpty();
+        TestMessages.GreetingMessage.ToString().Should().NotBeNullOrEmpty();
     }
     
     [Fact]

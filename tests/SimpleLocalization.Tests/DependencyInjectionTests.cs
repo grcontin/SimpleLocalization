@@ -23,6 +23,6 @@ public sealed class DependencyInjectionTests
     
         // Assert
         options.Should().NotBeNull();
-        TestMessages.Welcome.ToString().Should().NotBeNullOrEmpty();
+        TestMessages.GreetingMessage.ToString().Should().NotBeNullOrEmpty();
     }
 }

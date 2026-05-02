@@ -2,7 +2,9 @@ using System.Globalization;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
+using SimpleLocalization.Benchmarks.Abstractions;
+using SimpleLocalization.Benchmarks.Internal.Microsoft;
+using SimpleLocalization.Benchmarks.Internal.SimpleLocalization;
 using SimpleLocalization.Internal;
 
 namespace SimpleLocalization.Benchmarks;
@@ -12,7 +14,8 @@ namespace SimpleLocalization.Benchmarks;
 [RankColumn]
 public class LocalizationBenchmark
 {
-    private IStringLocalizer _microsoftLocalizer = null!;
+    private IBenchmarkLocalizer _microsoftService = null!;
+    private IBenchmarkLocalizer _simpleService = null!;
 
     [GlobalSetup]
     public void Setup()
@@ -22,48 +25,40 @@ public class LocalizationBenchmark
         LocalizationStore.Initialize(typeof(LocalizationBenchmark).Assembly);
 
         ServiceCollection services = new ServiceCollection();
+        
         services.AddLogging();
         services.AddLocalization();
         
-        ServiceProvider provider = services.BuildServiceProvider();
-        IStringLocalizerFactory factory = provider.GetRequiredService<IStringLocalizerFactory>();
+        services.AddSingleton<MicrosoftService>();
+        services.AddSingleton<SimpleLocalizationService>();
         
-        _microsoftLocalizer = factory.Create(typeof(LocalizationBenchmark));
+        ServiceProvider provider = services.BuildServiceProvider();
+        
+        _microsoftService = provider.GetRequiredService<MicrosoftService>();
+        _simpleService = provider.GetRequiredService<SimpleLocalizationService>();
     }
     
     [Benchmark(Description = "Simple Localization Lookup")]
     public string SimpleLocalization_Lookup()
     {
-        return BenchmarkMessages.Welcome;
+        return _simpleService.GetValue();
     }
     
     [Benchmark(Description = "Simple Localization string Format")]
     public string SimpleLocalization_Format()
     {
-        return BenchmarkMessages.UserNotifications.Format("Gabriel", 10);
+        return _simpleService.GetFormattedValue(10);
     }
 
     [Benchmark(Baseline = true, Description = "IStringLocalizer Lookup")]
     public string Microsoft_Lookup()
     {
-        LocalizedString result = _microsoftLocalizer["Welcome"];
-        return result.Value;
+        return _microsoftService.GetValue();
     }
     
     [Benchmark(Description = "IStringLocalizer string Format")]
     public string Microsoft_Format()
     {
-        LocalizedString template = _microsoftLocalizer["UserNotifications"];
-        return string.Format(template.Value, "Gabriel", 10);
+        return _microsoftService.GetFormattedValue(10);
     }
-}
-
-[Localizable]
-internal sealed class BenchmarkMessages
-{
-    [Translation("en-US", "Welcome!")]
-    public static readonly LocalizableString Welcome = new();
-
-    [Translation("en-US", "Hello {0}, you have {1} messages.")]
-    public static readonly LocalizableString UserNotifications = new();
 }

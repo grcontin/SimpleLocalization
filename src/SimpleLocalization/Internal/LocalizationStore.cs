@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 
@@ -73,7 +72,7 @@ internal static class LocalizationStore
         }
 
         CultureInfo parentCulture = currentCulture.Parent;
-
+        
         if (!parentCulture.Equals(CultureInfo.InvariantCulture) 
             && _store.TryGetValue(parentCulture.Name, out Dictionary<string, string>? parentTranslations) 
             && parentTranslations.TryGetValue(absoluteKey, out string? parentValue))

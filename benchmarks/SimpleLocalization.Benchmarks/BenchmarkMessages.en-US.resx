@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="GreetingMessage" xml:space="preserve">
+        <value>Welcome!</value>
+    </data>
+    <data name="UserNotification" xml:space="preserve">
+        <value>You have {0} messages.</value>
+    </data>
+</root>

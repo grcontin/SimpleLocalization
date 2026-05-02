@@ -5,7 +5,7 @@ internal static class TestMessages
 {
     [Translation("en-US", "Welcome!")]
     [Translation("pt-BR", "Bem-vindo!")]
-    public static readonly LocalizableString Welcome = new();
+    public static readonly LocalizableString GreetingMessage = new();
     
     [Translation("en-US", "Hello {0}, you have {1} messages.")]
     [Translation("pt-BR", "Olá {0}, você tem {1} mensagens.")]
