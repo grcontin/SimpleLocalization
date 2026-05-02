@@ -56,8 +56,8 @@ This ensures that your API remains interoperable and follows internationalizatio
 
 The library implements a robust hierarchical fallback system. If a translation is missing for a specific sub-culture, it automatically traverses up the culture tree:
 
-1. **Specific Culture** — e.g. `pt-BR`
-2. **Parent Culture** — e.g. `pt`
+1. **Specific Culture** — e.g. `en-US`
+2. **Parent Culture** — e.g. `en`
 3. **Default / Absolute Key** — if no translation is found in the hierarchy, the library returns the fully qualified name
 
 ### 3. Static Contexts & Extension Methods
@@ -102,10 +102,15 @@ public static class UserErrors
 
 ### 2. Initialize
 
-Call this once at your application startup (e.g., Program.cs).
+Call this once at your application startup (e.g., `Program.cs`).
+
+You can provide multiple assemblies, which is useful when your localization messages are distributed across different projects or modules.
 
 ```csharp
-services.AddSimpleLocalization(typeof(Program).Assembly);
+services.AddSimpleLocalization(
+    typeof(ApplicationAssemblyMarker).Assembly,
+    typeof(DomainAssemblyMarker).Assembly
+);
 ```
 
 ### 3. Configure Middleware (ASP.NET Core)
