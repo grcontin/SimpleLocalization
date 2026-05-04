@@ -1,6 +1,6 @@
 # SimpleLocalization
 
-**SimpleLocalization** is a zero-boilerplate, high-performance localization library for .NET that eliminates the friction of managing .resx files and DI dependencies. It provides a strictly typed, "install-and-use" experience, allowing you to localize any part of your application
+**SimpleLocalization** is a high-performance, strictly typed localization library for .NET 8+. It was designed to provide a superior Developer Experience (DX) by removing the friction of managing IStringLocalizer and multiple .resx files. It allows you to localize any part of your application
 
 ---
 ### Installation
@@ -13,7 +13,10 @@ dotnet add package grcontin.SimpleLocalization
 
 ## Why SimpleLocalization?
 
-Standard .NET localization (`IStringLocalizer`) is built around Dependency Injection. This creates significant architectural problems when you need to localize messages in layers that should remain agnostic to infrastructure.
+Standard .NET localization (IStringLocalizer) is heavily tied to Dependency Injection and brittle XML-based .resx files, forcing infrastructure concerns into layers that should remain clean. SimpleLocalization solves this with a code-first approach that requires no DI or complex setup. It delivers superior DX by keeping everything in code.
+
+By being natively compliant with RFC 9110, it handles 'Accept-Language' headers automatically. You simply define your localizable objects and add the middleware; no extra implementations or management overhead required
+
 
 ## RFC 9110 Compliance & Middleware Integration
 
