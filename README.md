@@ -56,13 +56,14 @@ Mark your class with [Localizable] and use [Translation] attributes.
 
 ```csharp
 [Localizable]
-public static class UserErrors
+public static class UserMessages
 {
     [Translation("en-US", "User not found.")]
     [Translation("pt-BR", "Usuário não encontrado.")]
     public static readonly LocalizableString NotFound = new();
 
     [Translation("en-US", "Hello {0}, you have {1} messages.")]
+    [Translation("pt-BR", "Olá {0}, você tem {1} mensagens.")]
     public static readonly LocalizableString Notifications = new();
 }
 ```
@@ -102,7 +103,7 @@ app.UseRequestLocalization(localizationOptions);
 
 ```csharp
 // Implicit conversion to string
-string message = UserErrors.NotFound;
+string message = UserMessages.NotFound;
 
-string formatted = UserErrors.Notifications.Format("Gabriel", 5);
+string formatted = UserMessages.Notifications.Format("Gabriel", 5);
 ```
