@@ -1,6 +1,6 @@
 # SimpleLocalization
 
-**SimpleLocalization** is a high-performance, strictly typed, and DI-less localization library for .NET 6+. It addresses the architectural gaps left by `IStringLocalizer`, allowing you to localize code where Dependency Injection cannot reach, such as Domain Layers and Static Contexts.
+**SimpleLocalization** is a high-performance, strictly typed localization library for .NET 8+. It was designed to provide a superior Developer Experience (DX) by removing the friction of managing IStringLocalizer and multiple .resx files. It allows you to localize any part of your application
 
 ---
 ### Installation
@@ -13,41 +13,10 @@ dotnet add package grcontin.SimpleLocalization
 
 ## Why SimpleLocalization?
 
-Standard .NET localization (`IStringLocalizer`) is built around Dependency Injection. This creates significant architectural problems when you need to localize messages in layers that should remain agnostic to infrastructure.
+Standard .NET localization (IStringLocalizer) is heavily tied to Dependency Injection and brittle XML-based .resx files, forcing infrastructure concerns into layers that should remain clean. SimpleLocalization solves this with a code-first approach that requires no DI or complex setup. It delivers superior DX by keeping everything in code.
 
-### 1. Pure Domain Exceptions
-In a clean architecture, your Domain Layer should not depend on infrastructure services. 
-*   **The Problem:** To localize a `DomainException`, you would normally need to pass an `IStringLocalizer` through your entire call stack or use a Service Locator (anti-pattern).
-*   **The Solution:** Use `LocalizableString` directly in your exception constructors. Your domain remains pure, and your exceptions are born with the ability to be localized.
-```csharp
-public sealed class DomainException : Exception
-{
-    public DomainException(LocalizableString message) : base(message) { }
-}
+By being natively compliant with RFC 9110, it handles 'Accept-Language' headers automatically. You simply define your localizable objects and add the middleware; no extra implementations or management overhead required
 
-// Usage in Domain Service - No DI pollution
-if (balance < amount) 
-    throw new BusinessException(UserErrors.InsufficientFunds);
-
-```
-
-### 2. Validation Attributes
-
-Attributes are metadata evaluated at compile-time and do not support constructor injection.
-
-*   **The Problem:** Localizing [Required] or [RegularExpression] attributes usually involves magic strings and .resx names that are fragile and hard to refactor.
-
-*   **The Solution:** Use the static fields of your localizable classes. They provide type-safety, IDE support (find all references), and are resolved at runtime based on the current thread culture.
-
-```csharp
-
-public sealed class UserInput
-{
-    [Required(ErrorMessage = ErrorMessages.FieldRequired)]
-    public string Username { get; set; }
-}
-
-```
 
 ## RFC 9110 Compliance & Middleware Integration
 
@@ -67,16 +36,7 @@ The library implements a robust hierarchical fallback system. If a translation i
 2. **Parent Culture** — e.g. `en`
 3. **Default / Absolute Key** — if no translation is found in the hierarchy, the library returns the fully qualified name
 
-### 3. Static Contexts & Extension Methods
-
-Utility classes and extension methods often need to return human-readable messages but lack access to DI.
-
-*   **The Problem:** You cannot easily use DI inside a public static string ToRelativeTime(this DateTime date).
-
-*   **The Solution:** Access your translations directly. SimpleLocalization is global, thread-safe, and highly optimized for static access.
-
-
-## Benchmarks (.NET 10)
+## Benchmarks
 
 Comparison against `Microsoft.Extensions.Localization` using physical `.resx` files.
 
@@ -87,7 +47,7 @@ Comparison against `Microsoft.Extensions.Localization` using physical `.resx` fi
 | Simple Localization Format | 32.73 ns | 1.47 | 88 B |
 | IStringLocalizer Format | 37.73 ns | 1.70 | 256 B |
 
-Quick Start
+# Quick Start
 ### 1. Define your messages
 
 Mark your class with [Localizable] and use [Translation] attributes.
@@ -114,7 +74,9 @@ Call this once at your application startup (e.g., `Program.cs`).
 You can provide multiple assemblies, which is useful when your localization messages are distributed across different projects or modules.
 
 ```csharp
-services.AddSimpleLocalization(
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSimpleLocalization(
     typeof(ApplicationAssemblyMarker).Assembly,
     typeof(DomainAssemblyMarker).Assembly
 );
@@ -125,7 +87,10 @@ services.AddSimpleLocalization(
 For the library to correctly identify the user's culture, it is crucial to configure the native .NET localization middleware. SimpleLocalization relies on the CultureInfo.CurrentUICulture set by this pipeline.
 
 ```csharp
-RequestLocalizationOptions localizationOptions = new RequestLocalizationOptions()
+
+var app = builder.Build();
+
+var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture("en-US")
     .AddSupportedCultures("en-US", "pt-BR")
     .AddSupportedUICultures("en-US", "pt-BR");
@@ -139,6 +104,5 @@ app.UseRequestLocalization(localizationOptions);
 // Implicit conversion to string
 string message = UserErrors.NotFound;
 
-// High-performance formatting (Zero-boxing for common types)
 string formatted = UserErrors.Notifications.Format("Gabriel", 5);
 ```

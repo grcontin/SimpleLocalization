@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <PackageId>grcontin.SimpleLocalization</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Gabriel Contin</Authors>
     <Title>SimpleLocalization</Title>
-    <Description>High-performance, strictly typed, and DI-less localization library for .NET. Optimized for Domain Layers, Static Contexts, and RFC 9110 compliance.</Description>
-    <PackageTags>localization;i18n;ddd;performance;static-localization;net10;rfc9110</PackageTags>
+    <Description>High-performance, type-safe and DI-less localization for .NET. No .resx files, no infrastructure friction and RFC 9110 compliance.</Description>
+    <PackageTags>localization;i18n;ddd;performance;static-localization;net10;net8;rfc9110</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
